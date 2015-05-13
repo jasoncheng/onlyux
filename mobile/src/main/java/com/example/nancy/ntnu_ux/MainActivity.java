@@ -2,21 +2,66 @@ package com.example.nancy.ntnu_ux;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 
 public class MainActivity extends Activity {
 
+
+  private int minSize = 50;
+  private int maxSize = 120;
+  int viewWidth = 0;
+  int viewHeight = 0;
+
+  int lastCircleX = 0;
+  int lastCircleY = 0;
+  int lastCircleRadius = 0;
+
+  private ViewGroup parentView;
+  private CircleView c;
+  private final String TAG = "Nancy";
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(new CircleView(this.getApplicationContext()));
+    setContentView(R.layout.activity_main);
 
-//    ViewGroup g = (ViewGroup)this.findViewById(R.id.parentView);
-//    g.addView(new CircleView(this.getApplicationContext(), "#ff0000", 30));
-//    g.addView(new CircleView(this.getApplicationContext(), "#99ccff", 60));
+
+    parentView = (ViewGroup) this.findViewById(R.id.parentView);
+    parentView.setOnTouchListener(new View.OnTouchListener() {
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+          case MotionEvent.ACTION_DOWN:
+            break;
+          case MotionEvent.ACTION_UP:
+            Log.i(TAG, "=======> " + event.getX() + ", " + event.getY() + ", radius: " + lastCircleRadius + ", dist: " + getDist(event.getX(), event.getY()));
+            drawCircle();
+            break;
+          default:
+            break;
+        }
+        return true;
+      }
+    });
+
+    ViewTreeObserver vto = parentView.getViewTreeObserver();
+    vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+      public boolean onPreDraw() {
+        parentView.getViewTreeObserver().removeOnPreDrawListener(this);
+        viewHeight = parentView.getMeasuredHeight();
+        viewWidth = parentView.getMeasuredWidth();
+
+        drawCircle();
+        return true;
+      }
+    });
   }
 
   @Override
@@ -25,6 +70,38 @@ public class MainActivity extends Activity {
     getMenuInflater().inflate(R.menu.menu_main, menu);
     return true;
   }
+
+  private void drawCircle() {
+
+    parentView.removeAllViews();
+
+    c = new CircleView(getApplicationContext());
+    parentView.addView(c);
+    int size = c.getLayoutParams().width = c.getLayoutParams().height = getRandomSize();
+
+    lastCircleRadius = size;
+    lastCircleX = getRandomX(size);
+    lastCircleY = getRandomY(size);
+    c.setX(lastCircleX);
+    c.setY(lastCircleY);
+  }
+
+  private int getDist(float x2, float y2) {
+    return (int) Math.ceil(Math.sqrt(Math.pow(lastCircleX - x2, 2) + Math.pow(lastCircleY - y2, 2)));
+  }
+
+  private int getRandomSize() {
+    return (int) (Math.random() * (maxSize - minSize + 1) + minSize);
+  }
+
+  private int getRandomX(int size) {
+    return (int) Math.ceil(Math.random() * (viewWidth - size));
+  }
+
+  private int getRandomY(int size) {
+    return (int) Math.ceil(Math.random() * (viewHeight - size));
+  }
+
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
