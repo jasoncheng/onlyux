@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 
-public class MainActivity extends Activity {
+public class TestActivity extends Activity {
 
 
   private int minSize = 50;
@@ -26,6 +26,13 @@ public class MainActivity extends Activity {
   private ViewGroup parentView;
   private CircleView c;
   private final String TAG = "Nancy";
+
+  // Configurable
+  private int[] circleSize = {50, 60, 70, 90, 110};
+  private int circleTestTimes = 5;
+
+  private int circleTestIndex = 0;
+  private int circleSizeIndex = 0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -71,28 +78,50 @@ public class MainActivity extends Activity {
     return true;
   }
 
+  private void runCounter(){
+    // when same size circle test finish
+    if(this.circleTestTimes - 1 == this.circleTestIndex) {
+      this.circleSizeIndex++;
+      this.circleTestIndex = 0;
+      return;
+    }
+    this.circleTestIndex++;
+  }
+
+  private boolean isFinish(){
+    return this.circleSize.length - 1 == this.circleSizeIndex && this.circleTestTimes - 1 == this.circleTestIndex;
+  }
+
   private void drawCircle() {
+
+    if(this.isFinish()){
+      Log.d(TAG, "test done!!!!");
+      return;
+    }
 
     parentView.removeAllViews();
 
     c = new CircleView(getApplicationContext());
     parentView.addView(c);
-    int size = c.getLayoutParams().width = c.getLayoutParams().height = getRandomSize();
+
+    int size = c.getLayoutParams().width = c.getLayoutParams().height = this.circleSize[this.circleSizeIndex];
 
     lastCircleRadius = size;
     lastCircleX = getRandomX(size);
     lastCircleY = getRandomY(size);
     c.setX(lastCircleX);
     c.setY(lastCircleY);
+
+    runCounter();
   }
 
   private int getDist(float x2, float y2) {
     return (int) Math.ceil(Math.sqrt(Math.pow(lastCircleX - x2, 2) + Math.pow(lastCircleY - y2, 2)));
   }
 
-  private int getRandomSize() {
-    return (int) (Math.random() * (maxSize - minSize + 1) + minSize);
-  }
+//  private int getRandomSize() {
+//    return (int) (Math.random() * (maxSize - minSize + 1) + minSize);
+//  }
 
   private int getRandomX(int size) {
     return (int) Math.ceil(Math.random() * (viewWidth - size));
