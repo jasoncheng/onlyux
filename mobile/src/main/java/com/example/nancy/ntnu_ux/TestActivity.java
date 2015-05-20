@@ -10,12 +10,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import java.util.ArrayList;
+
 
 public class TestActivity extends Activity {
 
 
-  private int minSize = 50;
-  private int maxSize = 120;
+//  private int minSize = 50;
+//  private int maxSize = 120;
+
+
+  // Configurable
+  private int[] circleSize = {50, 60, 70, 90, 110};
+  private int circleTestTimes = 5;
+
+  // Score
+  ArrayList<Integer> mTimeTest = new ArrayList<Integer>();
+  ArrayList<Boolean> mScoreSuccess = new ArrayList<Boolean>();
+
+
   int viewWidth = 0;
   int viewHeight = 0;
 
@@ -26,10 +39,6 @@ public class TestActivity extends Activity {
   private ViewGroup parentView;
   private CircleView c;
   private final String TAG = "Nancy";
-
-  // Configurable
-  private int[] circleSize = {50, 60, 70, 90, 110};
-  private int circleTestTimes = 5;
 
   private int circleTestIndex = 0;
   private int circleSizeIndex = 0;
@@ -42,13 +51,23 @@ public class TestActivity extends Activity {
 
     parentView = (ViewGroup) this.findViewById(R.id.parentView);
     parentView.setOnTouchListener(new View.OnTouchListener() {
+
+      long startTime;
+
       @Override
       public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
           case MotionEvent.ACTION_DOWN:
+            startTime = System.currentTimeMillis();
             break;
           case MotionEvent.ACTION_UP:
-            Log.i(TAG, "=======> " + event.getX() + ", " + event.getY() + ", radius: " + lastCircleRadius + ", dist: " + getDist(event.getX(), event.getY()));
+            int dist = getDist(event.getX(), event.getY());
+            boolean isSuccess = lastCircleRadius - dist >= 0;
+            int use = (int)(System.currentTimeMillis() - startTime);
+            Log.i(TAG, "=======> " + use + ":" + isSuccess);
+
+            mTimeTest.add(use);
+            mScoreSuccess.add(isSuccess);
             drawCircle();
             break;
           default:
