@@ -23,4 +23,6 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
     compile 'com.google.android.gms:play-services:+'
+    compile files('/Users/jasoncheng/Documents/workspace-readonly/onlyux_jason/libs/Parse-1.9.2.jar')
+    compile files('/Users/jasoncheng/Documents/workspace-readonly/onlyux_jason/libs/bolts-android-1.2.0.jar')
 }
