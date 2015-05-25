@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
+import com.example.nancy.ntnu_ux.com.example.nancy.ntnu_ux.bean.Test;
+import com.parse.ParseObject;
+
 import java.util.ArrayList;
 
 
@@ -42,12 +45,16 @@ public class TestActivity extends Activity {
 
   private int circleTestIndex = 0;
   private int circleSizeIndex = 0;
+  private Test mTest;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    String testId = this.getIntent().getStringExtra("TestId");
+    mTest = ParseObject.createWithoutData(Test.class, testId);
+    Log.i(TAG, "============> TestID: " + testId);
 
     parentView = (ViewGroup) this.findViewById(R.id.parentView);
     parentView.setOnTouchListener(new View.OnTouchListener() {

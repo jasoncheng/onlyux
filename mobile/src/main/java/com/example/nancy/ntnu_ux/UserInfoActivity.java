@@ -9,12 +9,19 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.example.nancy.ntnu_ux.com.example.nancy.ntnu_ux.bean.Test;
+import com.parse.ParseException;
+import com.parse.SaveCallback;
 
 public class UserInfoActivity extends Activity {
 
   private int startAge = 6;
   private int endAge = 40;
+
+  private Spinner mAge;
+  private Spinner mGender;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +32,29 @@ public class UserInfoActivity extends Activity {
     bt.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        Intent intent = new Intent(UserInfoActivity.this, TestActivity.class);
-        startActivity(intent);
+        Toast.makeText(UserInfoActivity.this.getBaseContext(),"initial test, wait a minute", Toast.LENGTH_SHORT).show();
+        final Test t = new Test();
+        t.setAge(Integer.parseInt(mAge.getSelectedItem().toString()));
+        t.setGender(mGender.getSelectedItem().toString());
+        t.saveInBackground();
+        t.saveInBackground(new SaveCallback() {
+          @Override
+          public void done(ParseException e) {
+            if (e != null) {
+              Toast.makeText(UserInfoActivity.this.getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+              return;
+            }
+            Intent intent = new Intent(UserInfoActivity.this, TestActivity.class);
+            intent.putExtra("TestId", t.getObjectId());
+            startActivity(intent);
+          }
+        });
+
       }
     });
+
+    // gender
+    mGender = (Spinner) findViewById(R.id.gender);
 
     // Age
     Integer[] age = new Integer[endAge-startAge+1];
@@ -38,9 +64,9 @@ public class UserInfoActivity extends Activity {
       idx++;
     }
 
-    Spinner mspin=(Spinner) findViewById(R.id.age);
+    mAge = (Spinner) findViewById(R.id.age);
     ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(this.getBaseContext(),android.R.layout.simple_spinner_item, age);
-    mspin.setAdapter(adapter);
+    mAge.setAdapter(adapter);
   }
 
   @Override
