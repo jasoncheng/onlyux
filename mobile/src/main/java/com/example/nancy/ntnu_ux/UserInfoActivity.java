@@ -17,9 +17,6 @@ import com.parse.SaveCallback;
 
 public class UserInfoActivity extends Activity {
 
-  private int startAge = 6;
-  private int endAge = 40;
-
   private Spinner mAge;
   private Spinner mGender;
 
@@ -33,7 +30,7 @@ public class UserInfoActivity extends Activity {
       @Override
       public void onClick(View v) {
         Toast.makeText(UserInfoActivity.this.getBaseContext(),"initial test, wait a minute", Toast.LENGTH_SHORT).show();
-        final Test t = new Test();
+        Test t = ApplicationTest.initTest();
         t.setAge(Integer.parseInt(mAge.getSelectedItem().toString()));
         t.setGender(mGender.getSelectedItem().toString());
         t.saveInBackground();
@@ -45,7 +42,7 @@ public class UserInfoActivity extends Activity {
               return;
             }
             Intent intent = new Intent(UserInfoActivity.this, TestActivity.class);
-            intent.putExtra("TestId", t.getObjectId());
+            intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
           }
         });
@@ -57,9 +54,9 @@ public class UserInfoActivity extends Activity {
     mGender = (Spinner) findViewById(R.id.gender);
 
     // Age
-    Integer[] age = new Integer[endAge-startAge+1];
+    Integer[] age = new Integer[Consts.MAX_AGE-Consts.MIN_AGE+1];
     int idx = 0;
-    for(int i=startAge; i<=endAge; i++){
+    for(int i=Consts.MIN_AGE; i<= Consts.MAX_AGE; i++){
       age[idx] = i;
       idx++;
     }
@@ -69,31 +66,25 @@ public class UserInfoActivity extends Activity {
     mAge.setAdapter(adapter);
   }
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-//    ApplicationTest.restartTest();
-  }
+//  @Override
+//  public boolean onCreateOptionsMenu(Menu menu) {
+//    // Inflate the menu; this adds items to the action bar if it is present.
+//    getMenuInflater().inflate(R.menu.menu_user_info, menu);
+//    return true;
+//  }
 
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.menu_user_info, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
-    int id = item.getItemId();
-
-    //noinspection SimplifiableIfStatement
-    if (id == R.id.action_settings) {
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
+//  @Override
+//  public boolean onOptionsItemSelected(MenuItem item) {
+//    // Handle action bar item clicks here. The action bar will
+//    // automatically handle clicks on the Home/Up button, so long
+//    // as you specify a parent activity in AndroidManifest.xml.
+//    int id = item.getItemId();
+//
+//    //noinspection SimplifiableIfStatement
+//    if (id == R.id.action_settings) {
+//      return true;
+//    }
+//
+//    return super.onOptionsItemSelected(item);
+//  }
 }

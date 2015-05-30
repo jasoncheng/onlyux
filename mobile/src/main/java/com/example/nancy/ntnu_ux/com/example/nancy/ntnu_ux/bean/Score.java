@@ -12,9 +12,19 @@ public class Score extends ParseObject{
   public final static String TIME = "time";
   public final static String SUCCESS = "success";
   public final static String DIST = "dist";
+  public final static String STAGE = "stage";
+  public final static String RADIUS = "radius";
 
   public void setTest(Test t){
     this.put(TEST, t);
+  }
+
+  public void setRadius(int radius){
+    this.put(RADIUS, radius);
+  }
+
+  public void setStage(String stage){
+    this.put(STAGE, stage);
   }
 
   public void setTime(int t){

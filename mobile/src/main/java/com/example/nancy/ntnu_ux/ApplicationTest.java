@@ -14,6 +14,7 @@ import com.parse.ParseObject;
 public class ApplicationTest extends Application {
 
     private static int fail_count = 0;
+    private static Test mTest;
 
     @Override
     public void onCreate() {
@@ -24,19 +25,31 @@ public class ApplicationTest extends Application {
         ParseObject.registerSubclass(Test.class);
         ParseObject.registerSubclass(Score.class);
     }
-//    public ApplicationTest() {
-//        super(Application.class);
-//    }
 
     public static void addFail(){
+        mTest.increment(Test.FAIL_COUNT);
         fail_count++;
     }
 
-    public static void restartTest(){
+    public static void resetTest(){
         fail_count = 0;
     }
 
     public static boolean isFail(){
         return Consts.MAX_FAILURE <= fail_count;
+    }
+
+    public static Test initTest(){
+        mTest = new Test();
+        resetTest();
+        return mTest;
+    }
+
+    public static Test getTest(){
+        return mTest;
+    }
+
+    public static void setTestScore(String stage){
+
     }
 }
