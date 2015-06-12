@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Test</string>
     <string name="title_test_first">Simple Click</string>
+    <string name="title_test_second">Double Click</string>
     <string name="title_activity_user_info">UserInfo</string>
     <string name="action_settings">Settings</string>
 </resources>
