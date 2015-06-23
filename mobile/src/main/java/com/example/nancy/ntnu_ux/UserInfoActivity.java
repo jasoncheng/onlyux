@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -19,11 +21,23 @@ public class UserInfoActivity extends Activity {
 
   private Spinner mAge;
   private Spinner mGender;
+  ViewGroup parentView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.userinfo);
+
+    parentView = (ViewGroup) this.findViewById(R.id.parentView);
+    ViewTreeObserver vto = parentView.getViewTreeObserver();
+    vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+      public boolean onPreDraw() {
+        parentView.getViewTreeObserver().removeOnPreDrawListener(this);
+        ApplicationTest.viewHeight = parentView.getMeasuredHeight();
+        ApplicationTest.viewWidth = parentView.getMeasuredWidth();
+        return true;
+      }
+    });
 
     Button bt = (Button) this.findViewById(R.id.letsgo);
     bt.setOnClickListener(new View.OnClickListener() {
@@ -41,7 +55,7 @@ public class UserInfoActivity extends Activity {
               Toast.makeText(UserInfoActivity.this.getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
               return;
             }
-            Intent intent = new Intent(UserInfoActivity.this, TestActivity.class);
+            Intent intent = new Intent(UserInfoActivity.this, TestActivity3.class);
             intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
           }

@@ -20,6 +20,10 @@
             android:label="@string/title_test_second" >
         </activity>
         <activity
+            android:name=".TestActivity3"
+            android:label="@string/title_third" >
+        </activity>
+        <activity
             android:name=".UserInfoActivity"
             android:label="@string/title_activity_user_info" >
             <intent-filter>
