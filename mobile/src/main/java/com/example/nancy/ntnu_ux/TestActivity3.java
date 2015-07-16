@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.DragEvent;
@@ -26,20 +27,32 @@ import java.util.List;
 
 public class TestActivity3 extends Activity {
 
+  int waitToNextTest = 2000;
+
   int lastCircleX = 0;
   int lastCircleY = 0;
+  int lastTargetX = 0;
+  int lastTargetY = 0;
   int lastCircleRadius = 0;
+
+  // previous drag position
+  int prevX = 0;
+  int prevY = 0;
+
+  int totalDist = 0;
 
   private ViewGroup parentView;
   private CircleView c;
+
+  // drop target
+  private CircleView ct;
+
   private final String TAG = "Nancy";
 
   private int circleTestIndex = 0;
   private int circleSizeIndex = 0;
-//  private GestureDetectorCompat mDetector;
-  long startTime;
-
-//  private RelativeLayout.LayoutParams lp;
+  private long startTime;
+  private Handler mHandler = new Handler();
   private List<Long> mClickTime = new ArrayList<Long>();
 
   @Override
@@ -47,15 +60,8 @@ public class TestActivity3 extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-//    mDetector = new GestureDetectorCompat(this, new MyGestureListener());
     parentView = (ViewGroup) this.findViewById(R.id.parentView);
     parentView.setOnDragListener(new MyDragListener());
-//    parentView.setOnTouchListener(new View.OnTouchListener() {
-//      @Override
-//      public boolean onTouch(View v, MotionEvent event) {
-//        return mDetector.onTouchEvent(event);
-//      }
-//    });
     drawCircle();
   }
 
@@ -88,42 +94,71 @@ public class TestActivity3 extends Activity {
       int act = event.getAction();
       switch(act){
         case DragEvent.ACTION_DRAG_STARTED:
-//          lp = (RelativeLayout.LayoutParams) c.getLayoutParams();
-          Log.i(TAG, "===============> ACTION_DRAG_STARTED " + event.getX() + ", " + event.getY() );
+//          Log.i(TAG, "===============> ACTION_DRAG_STARTED " + event.getX() + ", " + event.getY() );
           break;
         case DragEvent.ACTION_DRAG_ENDED:
           break;
         case DragEvent.ACTION_DRAG_ENTERED:
+          totalDist = 0;
+          startTime = System.currentTimeMillis();
           Log.i(TAG, "===============> ACTION_DRAG_ENTERED " + event.getX() + ", " + event.getY() );
           break;
         case DragEvent.ACTION_DRAG_EXITED:
-//          lp.topMargin = (int) event.getY();
-//          lp.leftMargin = (int) event.getX();
-//          Log.i(TAG, "===============> ACTION_DRAG_EXITED " + lp.leftMargin + ", " + lp.topMargin );
-//          v.setLayoutParams(lp);
-//          v.setVisibility(View.VISIBLE);
           break;
         case DragEvent.ACTION_DROP:
-          Log.i(TAG, "===============> drop");
           View view = (View) event.getLocalState();
-          Log.i(TAG, "===============> ACTION_DROP " + event.getX() + ", " + event.getY() );
-//          lp.topMargin = (int) event.getY();
-//          lp.leftMargin = (int) event.getX();
-//          c.setLayoutParams(lp);
-//          ViewGroup owner = (ViewGroup) view.getParent();
-//          owner.removeView(view);
-//
           view.setX(event.getX() - x_dist);
           view.setY(event.getY() - y_dist);
           view.setVisibility(View.VISIBLE);
-//          ViewGroup container = (ViewGroup) v;
-//          container.removeAllViews();
-//          view.setBackgroundColor(Color.CYAN);
-//          view.setVisibility(View.VISIBLE);
-//          container.addView(view);
+
+          int use = (int)(System.currentTimeMillis() - startTime);
+          int dist = ApplicationTest.getDist(lastTargetX, lastTargetY, event.getX(), event.getY());
+          boolean isSuccess = dist <= lastCircleRadius*2;
+          Log.i(TAG, "===============> ACTION_DROP " + isSuccess + ", " + dist + ", " + totalDist);
+
+          // save data
+          String result = isSuccess ? "success" : "failure";
+          Toast.makeText(TestActivity3.this, "test " + result + ", please wait", Toast.LENGTH_SHORT).show();
+
+          ApplicationTest.getTest().increment(Test.STAGE_3_COUNT);
+          Score score = new Score();
+          score.setTest(ApplicationTest.getTest());
+          score.setRadius(lastCircleRadius);
+          score.setStage(Test.STAGE_3);
+          score.setSuccess(isSuccess);
+          score.setTime(use);
+          score.setDist(dist);
+          score.setDistDrag(totalDist);
+          score.setDistBetween(ApplicationTest.getDist(lastCircleX, lastCircleY, lastTargetX, lastTargetY));
+          score.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+              if (e != null) {
+                Log.e(TAG, e.getMessage());
+              }
+            }
+          });
+
+
+          if (isSuccess == false){
+            ApplicationTest.addFail();
+          }
+
+          // go to next size
+          mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+              totalDist = 0;
+              drawCircle();
+            }
+          }, waitToNextTest);
+
           break;
         case DragEvent.ACTION_DRAG_LOCATION:
-          Log.i(TAG, "===============> ACTION_DRAG_LOCATION " + event.getX() + ", " + event.getY() );
+//          Log.i(TAG, "===============> ACTION_DRAG_LOCATION " + event.getX() + ", " + event.getY() );
+          totalDist += ApplicationTest.getDist(prevX, prevY, event.getX(), event.getY());
+          prevX = (int)event.getX();
+          prevY = (int)event.getY();
           break;
       }
       return true;
@@ -142,7 +177,7 @@ public class TestActivity3 extends Activity {
   }
 
   private boolean isFinish(){
-    return ApplicationTest.getTest().getInt(Test.STAGE_2_COUNT) >= Consts.CIRCLE_SIZE.length * Consts.EACH_CIRCLE_TEST_TIMES;
+    return ApplicationTest.getTest().getInt(Test.STAGE_3_COUNT) >= Consts.CIRCLE_SIZE.length * Consts.EACH_CIRCLE_TEST_TIMES;
   }
 
   private void drawCircle() {
@@ -157,8 +192,8 @@ public class TestActivity3 extends Activity {
 
     if(this.isFinish()){
       Log.d(TAG, "===========> test done!!!!");
-      Toast.makeText(this, Test.STAGE_2 + " done! ", Toast.LENGTH_LONG).show();
-      ApplicationTest.getTest().setStageDone(Test.STAGE_2);
+      Toast.makeText(this, Test.STAGE_3 + " done! ", Toast.LENGTH_LONG).show();
+      ApplicationTest.getTest().setStageDone(Test.STAGE_3);
       ApplicationTest.getTest().saveInBackground();
       finish();
       return;
@@ -166,89 +201,30 @@ public class TestActivity3 extends Activity {
 
     parentView.removeAllViews();
 
+    // create dragable circle
     c = new CircleView(getApplicationContext());
     c.setOnTouchListener(new MyTouchListener());
     c.setOnDragListener(new MyDragListener());
-    // create fake group and append circle into fake
-//    RelativeLayout fake = new RelativeLayout(this);
-//    RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(
-//        RelativeLayout.LayoutParams.WRAP_CONTENT,
-//        RelativeLayout.LayoutParams.WRAP_CONTENT);
-//    fake.setLayoutParams(rlp);
-//    fake.addView(c);
-
     parentView.addView(c);
-
 
     int size = c.getLayoutParams().width = c.getLayoutParams().height = Consts.CIRCLE_SIZE[this.circleSizeIndex];
 
     lastCircleRadius = size;
-    lastCircleX = ApplicationTest.getRandomX(size);
-    lastCircleY = ApplicationTest.getRandomY(size);
+    prevX = lastCircleX = ApplicationTest.getRandomX(size);
+    prevY = lastCircleY = ApplicationTest.getRandomY(size);
     c.setX(lastCircleX);
     c.setY(lastCircleY);
 
+    // create target
+    lastTargetX = ApplicationTest.getRandomX(size);
+    lastTargetY = ApplicationTest.getRandomY(size);
+    ct = new CircleView(getApplicationContext(), Color.argb(100, 255, 0, 0));
+    parentView.addView(ct);
+
+    ct.getLayoutParams().width = ct.getLayoutParams().height = size;
+    ct.setX(lastTargetX);
+    ct.setY(lastTargetY);
+
     runCounter();
   }
-
-  private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-      Log.i(TAG, "==============> single tap");
-//      startTime = System.currentTimeMillis();
-      return super.onSingleTapUp(e);
-    }
-
-    @Override
-    public boolean onDown(MotionEvent e) {
-      Log.i(TAG, "===============> onDown");
-      mClickTime.add(System.currentTimeMillis());
-      if(mClickTime.size() == 3){
-        mClickTime.remove(0);
-      }
-      return true;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent event) {
-      startTime = mClickTime.get(0);
-      int dist = ApplicationTest.getDist(lastCircleX, lastCircleY, event.getX(), event.getY());
-      boolean isSuccess = lastCircleRadius - dist >= 0;
-      int use = (int)(System.currentTimeMillis() - startTime);
-      Log.i(TAG, "=======> " + use + ":" + isSuccess);
-      ApplicationTest.getTest().increment(Test.STAGE_2_COUNT);
-
-      Score score = new Score();
-      score.setTest(ApplicationTest.getTest());
-      score.setRadius(lastCircleRadius);
-      score.setStage(Test.STAGE_2);
-      score.setSuccess(isSuccess);
-      score.setTime(use);
-      score.setDist(dist);
-      score.saveInBackground(new SaveCallback() {
-        @Override
-        public void done(ParseException e) {
-          if (e != null){
-            Log.e(TAG, e.getMessage());
-          }
-        }
-      });
-
-
-      if (isSuccess == false){
-        ApplicationTest.addFail();
-      }
-
-      drawCircle();
-      return super.onDoubleTap(event);
-    }
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent e) {
-      return super.onSingleTapConfirmed(e);
-    }
-
-  }
-
 }

@@ -12,6 +12,11 @@ public class Score extends ParseObject{
   public final static String TIME = "time";
   public final static String SUCCESS = "success";
   public final static String DIST = "dist";
+
+  // only for test3
+  public final static String DIST_BETWEEN = "dist_between";
+  public final static String DIST_DRAG = "dist_drag";
+
   public final static String STAGE = "stage";
   public final static String RADIUS = "radius";
 
@@ -37,5 +42,13 @@ public class Score extends ParseObject{
 
   public void setDist(int dist){
     this.put(DIST, dist);
+  }
+
+  public void setDistBetween(int dist){
+    this.put(DIST_BETWEEN, dist);
+  }
+
+  public void setDistDrag(int dist){
+    this.put(DIST_DRAG, dist);
   }
 }

@@ -1,6 +1,7 @@
 package com.example.nancy.ntnu_ux;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
@@ -83,6 +84,8 @@ public class TestActivity2 extends Activity {
       Toast.makeText(this, Test.STAGE_2 + " done! ", Toast.LENGTH_LONG).show();
       ApplicationTest.getTest().setStageDone(Test.STAGE_2);
       ApplicationTest.getTest().saveInBackground();
+      Intent i = new Intent(this, TestActivity3.class);
+      startActivity(i);
       finish();
       return;
     }

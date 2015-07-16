@@ -12,8 +12,14 @@ import android.view.View;
  */
 public class CircleView extends View {
 
+  int color = Color.parseColor("#99ccff");
   public CircleView(Context ctx) {
     super(ctx);
+  }
+
+  public CircleView(Context ctx, int color){
+    super(ctx);
+    this.color = color;
   }
 
   @Override
@@ -38,7 +44,7 @@ public class CircleView extends View {
     int x = this.getWidth() / 2;
     int y = this.getHeight() / 2;
     int r = x;
-    paint.setColor(Color.parseColor("#99ccff"));
+    paint.setColor(color);
     canvas.drawCircle(x, y, r, paint);
 
   }

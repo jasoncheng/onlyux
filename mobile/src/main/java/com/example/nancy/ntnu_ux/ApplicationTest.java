@@ -21,7 +21,7 @@ public class ApplicationTest extends Application {
         super.onCreate();
         // Enable Local Datastore.
         Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "dsafqdDEKeWoHvl1ETKW24SuHbvQb5Fu7GbDZLaP", "9hO4w06jev9DxWcwYaM9E41H02Dj5NDxHSt2Z5EY");
+        Parse.initialize(this, Consts.PARSE_APP_ID, Consts.PARSE_APP_KEY);
         ParseObject.registerSubclass(Test.class);
         ParseObject.registerSubclass(Score.class);
     }

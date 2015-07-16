@@ -55,7 +55,7 @@ public class UserInfoActivity extends Activity {
               Toast.makeText(UserInfoActivity.this.getBaseContext(), e.getMessage(), Toast.LENGTH_LONG).show();
               return;
             }
-            Intent intent = new Intent(UserInfoActivity.this, TestActivity3.class);
+            Intent intent = new Intent(UserInfoActivity.this, TestActivity.class);
             intent.addFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
           }
