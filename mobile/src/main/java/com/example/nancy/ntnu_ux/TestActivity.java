@@ -54,7 +54,7 @@ public class TestActivity extends Activity {
             int dist = ApplicationTest.getDist(lastCircleX, lastCircleY, event.getX(), event.getY());
             boolean isSuccess = lastCircleRadius - dist >= 0;
             int use = (int)(System.currentTimeMillis() - startTime);
-            Log.i(TAG, "=======> " + use + ":" + isSuccess);
+            Log.i(TAG, "=======> " + use + ":" + isSuccess +", dist: "+dist+ ", pixel: " + lastCircleRadius + ", convert to mm: " + Consts.pxToMm(lastCircleRadius, getBaseContext()));
 //            mTimeTest.add(use);
 //            mScoreSuccess.add(isSuccess);
 
@@ -62,11 +62,11 @@ public class TestActivity extends Activity {
 
             Score score = new Score();
             score.setTest(ApplicationTest.getTest());
-            score.setRadius(lastCircleRadius);
+            score.setRadius(Consts.pxToMm(lastCircleRadius, getBaseContext()));
             score.setStage(Test.STAGE_1);
             score.setSuccess(isSuccess);
             score.setTime(use);
-            score.setDist(dist);
+            score.setDist(Consts.pxToMm(dist, getBaseContext()));
             score.saveInBackground(new SaveCallback() {
               @Override
               public void done(ParseException e) {
@@ -144,7 +144,8 @@ public class TestActivity extends Activity {
     c = new CircleView(getApplicationContext());
     parentView.addView(c);
 
-    int size = c.getLayoutParams().width = c.getLayoutParams().height = Consts.CIRCLE_SIZE[this.circleSizeIndex];
+    int realPixel = Consts.mmToPixel(this, String.valueOf(Consts.CIRCLE_SIZE[this.circleSizeIndex]));
+    int size = c.getLayoutParams().width = c.getLayoutParams().height = realPixel;
 
     lastCircleRadius = size;
     lastCircleX = ApplicationTest.getRandomX(size);

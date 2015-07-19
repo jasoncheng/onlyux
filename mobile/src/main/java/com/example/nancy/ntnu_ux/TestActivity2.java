@@ -95,7 +95,9 @@ public class TestActivity2 extends Activity {
     c = new CircleView(getApplicationContext());
     parentView.addView(c);
 
-    int size = c.getLayoutParams().width = c.getLayoutParams().height = Consts.CIRCLE_SIZE[this.circleSizeIndex];
+
+    int realPixel = Consts.mmToPixel(this, String.valueOf(Consts.CIRCLE_SIZE[this.circleSizeIndex]));
+    int size = c.getLayoutParams().width = c.getLayoutParams().height = realPixel;
 
     lastCircleRadius = size;
     lastCircleX = ApplicationTest.getRandomX(size);
@@ -136,11 +138,12 @@ public class TestActivity2 extends Activity {
 
       Score score = new Score();
       score.setTest(ApplicationTest.getTest());
-      score.setRadius(lastCircleRadius);
+      score.setRadius(Consts.pxToMm(lastCircleRadius, getBaseContext()));
       score.setStage(Test.STAGE_2);
       score.setSuccess(isSuccess);
       score.setTime(use);
-      score.setDist(dist);
+//      score.setDist(dist);
+      score.setDist(Consts.pxToMm(dist, getBaseContext()));
       score.saveInBackground(new SaveCallback() {
         @Override
         public void done(ParseException e) {

@@ -123,13 +123,14 @@ public class TestActivity3 extends Activity {
           ApplicationTest.getTest().increment(Test.STAGE_3_COUNT);
           Score score = new Score();
           score.setTest(ApplicationTest.getTest());
-          score.setRadius(lastCircleRadius);
+//          score.setRadius(lastCircleRadius);
+          score.setRadius(Consts.pxToMm(lastCircleRadius, getBaseContext()));
           score.setStage(Test.STAGE_3);
           score.setSuccess(isSuccess);
           score.setTime(use);
-          score.setDist(dist);
-          score.setDistDrag(totalDist);
-          score.setDistBetween(ApplicationTest.getDist(lastCircleX, lastCircleY, lastTargetX, lastTargetY));
+          score.setDistDrag(Consts.pxToMm(totalDist, getBaseContext()));
+          score.setDist(Consts.pxToMm(dist, getBaseContext()));
+          score.setDistBetween(Consts.pxToMm(ApplicationTest.getDist(lastCircleX, lastCircleY, lastTargetX, lastTargetY), getBaseContext()));
           score.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
@@ -207,7 +208,8 @@ public class TestActivity3 extends Activity {
     c.setOnDragListener(new MyDragListener());
     parentView.addView(c);
 
-    int size = c.getLayoutParams().width = c.getLayoutParams().height = Consts.CIRCLE_SIZE[this.circleSizeIndex];
+    int realPixel = Consts.mmToPixel(this, String.valueOf(Consts.CIRCLE_SIZE[this.circleSizeIndex]));
+    int size = c.getLayoutParams().width = c.getLayoutParams().height = realPixel;
 
     lastCircleRadius = size;
     prevX = lastCircleX = ApplicationTest.getRandomX(size);
