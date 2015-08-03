@@ -24,7 +24,7 @@ public class Score extends ParseObject{
     this.put(TEST, t);
   }
 
-  public void setRadius(int radius){
+  public void setRadius(float radius){
     this.put(RADIUS, radius);
   }
 
@@ -40,15 +40,15 @@ public class Score extends ParseObject{
     this.put(SUCCESS, isSuccess);
   }
 
-  public void setDist(int dist){
+  public void setDist(float dist){
     this.put(DIST, dist);
   }
 
-  public void setDistBetween(int dist){
+  public void setDistBetween(float dist){
     this.put(DIST_BETWEEN, dist);
   }
 
-  public void setDistDrag(int dist){
+  public void setDistDrag(float dist){
     this.put(DIST_DRAG, dist);
   }
 }

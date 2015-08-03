@@ -5,6 +5,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 
+import java.math.BigDecimal;
+
 /**
  * Created by jasoncheng on 15/5/20.
  */
@@ -23,10 +25,12 @@ public class Consts {
         ctx.getResources().getDisplayMetrics());
   }
 
-  public static int pxToMm(final int px, final Context context){
+  public static float pxToMm(final int px, final Context context){
     final DisplayMetrics dm = context.getResources().getDisplayMetrics();
     Log.i("Test", "==============> " + (px / TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, dm)));
-    return Math.round(px / TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, dm));
+    float f = px / TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_MM, 1, dm);
+    BigDecimal b = new BigDecimal(f);
+    return b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
 //    return (int)(px / dm.xdpi * 25.4f);
   }
 }

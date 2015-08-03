@@ -27,6 +27,11 @@ import java.util.List;
 
 public class TestActivity3 extends Activity {
 
+  // dist: 拖放完: A圓與B圓的距離
+  // dist_between: 測驗的A與B兩圓的距離
+  // dist_drag: 拖放的距離
+  // success : dist <= radius*2
+
   int waitToNextTest = 2000;
 
   int lastCircleX = 0;

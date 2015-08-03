@@ -22,6 +22,8 @@ import java.util.List;
 
 public class TestActivity2 extends Activity {
 
+  // success: radius - dist >= 0
+
   int lastCircleX = 0;
   int lastCircleY = 0;
   int lastCircleRadius = 0;
