@@ -19,6 +19,8 @@ public class Test extends ParseObject {
   public static final String STAGE_2_COUNT = "stage_2_c";
   public static final String STAGE_3_COUNT = "stage_3_c";
   public static final String FAIL_COUNT = "fail_c";
+  public static final String FREE_TEXT = "free_text";
+  public static final String ORIENTATION = "orientation";
 
   public Test(){
     this.put(FAIL_COUNT, 0);
@@ -32,6 +34,18 @@ public class Test extends ParseObject {
 
     this.put(DEVICE_MODEL, android.os.Build.MODEL);
     this.put(DEVICE_MANUFACTURER, android.os.Build.MANUFACTURER);
+  }
+
+  public void setFreeText(String text){
+    this.put(FREE_TEXT, text);
+  }
+
+  public void setOrientation(int pos){
+    String orientation = "landscape";
+    if(pos == 1){
+      orientation = "portrait";
+    }
+    this.put(ORIENTATION, orientation);
   }
 
   public void setAge(int age){

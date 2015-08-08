@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -21,6 +22,8 @@ public class UserInfoActivity extends Activity {
 
   private Spinner mAge;
   private Spinner mGender;
+  private Spinner mOrientation;
+  private EditText mFreeText;
   ViewGroup parentView;
 
   @Override
@@ -45,8 +48,10 @@ public class UserInfoActivity extends Activity {
       public void onClick(View v) {
         Toast.makeText(UserInfoActivity.this.getBaseContext(),"initial test, wait a minute", Toast.LENGTH_SHORT).show();
         Test t = ApplicationTest.initTest();
+        t.setOrientation(mOrientation.getSelectedItemPosition());
         t.setAge(Integer.parseInt(mAge.getSelectedItem().toString()));
         t.setGender(mGender.getSelectedItem().toString());
+        t.setFreeText(mFreeText.getText().toString());
         t.saveInBackground();
         t.saveInBackground(new SaveCallback() {
           @Override
@@ -63,6 +68,12 @@ public class UserInfoActivity extends Activity {
 
       }
     });
+
+    // free text
+    mFreeText = (EditText) findViewById(R.id.free_text);
+
+    // orientation
+    mOrientation = (Spinner) findViewById(R.id.orientation);
 
     // gender
     mGender = (Spinner) findViewById(R.id.gender);

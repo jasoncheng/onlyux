@@ -16,8 +16,11 @@ public class Consts {
 
   public static final int MAX_AGE = 45;
   public static final int MIN_AGE = 6;
-  public static final String[] CIRCLE_SIZE = {"2", "4", "6", "8","10"};
+//  public static final String[] CIRCLE_SIZE = {"2", "4", "6", "8","10"};
+
+  public static final String[] CIRCLE_SIZE = {"10", "8", "6", "4","2"};
   public static final int EACH_CIRCLE_TEST_TIMES = 5;
+
   public static final int MAX_FAILURE = (3 * CIRCLE_SIZE.length * EACH_CIRCLE_TEST_TIMES)+1;
 
   public static int mmToPixel(final Context ctx, String mm){
