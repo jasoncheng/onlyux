@@ -58,11 +58,11 @@ public class ApplicationTest extends Application {
     }
 
     public static int getRandomX(int size) {
-        return (int) Math.ceil(Math.random() * (viewWidth - size));
+        return (int) Math.ceil(Math.random() * (viewWidth - size - (Consts.PADDING * 2)));
     }
 
     public static int getRandomY(int size) {
-        return (int) Math.ceil(Math.random() * (viewHeight - size));
+        return (int) Math.ceil(Math.random() * (viewHeight - size- (Consts.PADDING * 2)));
     }
 
 }

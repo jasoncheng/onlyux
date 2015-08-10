@@ -14,6 +14,9 @@ public class Consts {
   public static final String PARSE_APP_ID = "UvIFyvUB5DsoEIVGPbRPaapK3foQxO77tf0WpbuU";
   public static final String PARSE_APP_KEY = "eNKyX8sCeWQ7GKrmpFt4MLhyBOdPAp4KmVWRJ1n6";
 
+  // The padding of screen (mapping to activity_main padding)
+  public static final int PADDING = 20;
+
   public static final int MAX_AGE = 45;
   public static final int MIN_AGE = 6;
 //  public static final String[] CIRCLE_SIZE = {"2", "4", "6", "8","10"};
