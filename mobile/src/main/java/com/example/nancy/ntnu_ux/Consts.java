@@ -11,8 +11,14 @@ import java.math.BigDecimal;
  * Created by jasoncheng on 15/5/20.
  */
 public class Consts {
-  public static final String PARSE_APP_ID = "UvIFyvUB5DsoEIVGPbRPaapK3foQxO77tf0WpbuU";
-  public static final String PARSE_APP_KEY = "eNKyX8sCeWQ7GKrmpFt4MLhyBOdPAp4KmVWRJ1n6";
+  // production
+//  public static final String PARSE_APP_ID = "UvIFyvUB5DsoEIVGPbRPaapK3foQxO77tf0WpbuU";
+//  public static final String PARSE_APP_KEY = "eNKyX8sCeWQ7GKrmpFt4MLhyBOdPAp4KmVWRJ1n6";
+
+
+  // Test
+  public static final String PARSE_APP_ID = "dsafqdDEKeWoHvl1ETKW24SuHbvQb5Fu7GbDZLaP";
+  public static final String PARSE_APP_KEY = "9hO4w06jev9DxWcwYaM9E41H02Dj5NDxHSt2Z5EY";
 
   // The padding of screen (mapping to activity_main padding)
   public static final int PADDING = 20;

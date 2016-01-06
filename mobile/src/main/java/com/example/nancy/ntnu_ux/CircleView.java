@@ -26,6 +26,8 @@ public class CircleView extends View {
   protected void onDraw(Canvas canvas) {
     super.onDraw(canvas);
 
+//    canvas.drawARGB(100, 225, 0, 255);
+
     Paint paint = new Paint();
     paint.setStyle(Paint.Style.FILL);
     paint.setColor(Color.TRANSPARENT);
