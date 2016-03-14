@@ -12,13 +12,13 @@ import java.math.BigDecimal;
  */
 public class Consts {
   // production
-//  public static final String PARSE_APP_ID = "UvIFyvUB5DsoEIVGPbRPaapK3foQxO77tf0WpbuU";
-//  public static final String PARSE_APP_KEY = "eNKyX8sCeWQ7GKrmpFt4MLhyBOdPAp4KmVWRJ1n6";
+  public static final String PARSE_APP_ID = "UvIFyvUB5DsoEIVGPbRPaapK3foQxO77tf0WpbuU";
+  public static final String PARSE_APP_KEY = "eNKyX8sCeWQ7GKrmpFt4MLhyBOdPAp4KmVWRJ1n6";
 
 
   // Test
-  public static final String PARSE_APP_ID = "dsafqdDEKeWoHvl1ETKW24SuHbvQb5Fu7GbDZLaP";
-  public static final String PARSE_APP_KEY = "9hO4w06jev9DxWcwYaM9E41H02Dj5NDxHSt2Z5EY";
+//  public static final String PARSE_APP_ID = "dsafqdDEKeWoHvl1ETKW24SuHbvQb5Fu7GbDZLaP";
+//  public static final String PARSE_APP_KEY = "9hO4w06jev9DxWcwYaM9E41H02Dj5NDxHSt2Z5EY";
 
   // The padding of screen (mapping to activity_main padding)
   public static final int PADDING = 20;
@@ -28,7 +28,7 @@ public class Consts {
 //  public static final String[] CIRCLE_SIZE = {"2", "4", "6", "8","10"};
 
   public static final String[] CIRCLE_SIZE = {"10", "8", "6", "4","2"};
-  public static final int EACH_CIRCLE_TEST_TIMES = 5;
+  public static final int EACH_CIRCLE_TEST_TIMES = 2;
 
   public static final int MAX_FAILURE = (3 * CIRCLE_SIZE.length * EACH_CIRCLE_TEST_TIMES)+1;
 
