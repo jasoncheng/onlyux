@@ -51,7 +51,6 @@ public class TestActivity extends Activity {
             startTime = System.currentTimeMillis();
             break;
           case MotionEvent.ACTION_UP:
-//            Log.i(TAG, "=======> " +  event.getX() + ", " + event.getY());
             int dist = ApplicationTest.getDist(lastCircleX, lastCircleY, event.getX(), event.getY());
             boolean isSuccess = lastCircleRadius - dist >= 0;
             int use = (int)(System.currentTimeMillis() - startTime);

@@ -112,16 +112,60 @@ public class TestActivity2 extends Activity {
 
   private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
 
-    @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-      Log.i(TAG, "==============> single tap");
+//    @Override
+//    public boolean onSingleTapUp(MotionEvent e) {
+//      Log.i(TAG, "=============u=> single "+System.currentTimeMillis());
 //      startTime = System.currentTimeMillis();
-      return super.onSingleTapUp(e);
+//      mClickTime.add(System.currentTimeMillis());
+//      if(mClickTime.size() == 3){
+//        mClickTime.remove(0);
+//      }
+//      return super.onSingleTapUp(e);
+//    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent event) {
+      if(event.getAction() == MotionEvent.ACTION_UP){
+        Log.i(TAG, "=============u=> "+System.currentTimeMillis());
+        startTime = mClickTime.get(0);
+        long endTime = System.currentTimeMillis();
+        Log.i(TAG, "=============s=> "+startTime);
+        Log.i(TAG, "=============e=> "+endTime);
+        int dist = ApplicationTest.getDist(lastCircleX, lastCircleY, event.getX(), event.getY());
+        boolean isSuccess = lastCircleRadius - dist >= 0;
+        int use = (int)(endTime - startTime);
+        Log.i(TAG, "=============f=> use " + use + " ms, is success " + isSuccess);
+        ApplicationTest.getTest().increment(Test.STAGE_2_COUNT);
+
+        Score score = new Score();
+        score.setTest(ApplicationTest.getTest());
+        score.setRadius(Consts.pxToMm(lastCircleRadius, getBaseContext()));
+        score.setStage(Test.STAGE_2);
+        score.setSuccess(isSuccess);
+        score.setTime(use);
+        score.setDist(Consts.pxToMm(dist, getBaseContext()));
+        score.saveInBackground(new SaveCallback() {
+          @Override
+          public void done(ParseException e) {
+            if (e != null){
+              Log.e(TAG, e.getMessage());
+            }
+          }
+        });
+
+
+        if (isSuccess == false){
+          ApplicationTest.addFail();
+        }
+
+        drawCircle();
+      }
+      return super.onDoubleTapEvent(event);
     }
 
     @Override
     public boolean onDown(MotionEvent e) {
-      Log.i(TAG, "===============> onDown");
+      Log.i(TAG, "=============d=> "+System.currentTimeMillis());
       mClickTime.add(System.currentTimeMillis());
       if(mClickTime.size() == 3){
         mClickTime.remove(0);
@@ -129,38 +173,10 @@ public class TestActivity2 extends Activity {
       return true;
     }
 
+
     @Override
     public boolean onDoubleTap(MotionEvent event) {
-      startTime = mClickTime.get(0);
-      int dist = ApplicationTest.getDist(lastCircleX, lastCircleY, event.getX(), event.getY());
-      boolean isSuccess = lastCircleRadius - dist >= 0;
-      int use = (int)(System.currentTimeMillis() - startTime);
-      Log.i(TAG, "=======> " + use + ":" + isSuccess);
-      ApplicationTest.getTest().increment(Test.STAGE_2_COUNT);
 
-      Score score = new Score();
-      score.setTest(ApplicationTest.getTest());
-      score.setRadius(Consts.pxToMm(lastCircleRadius, getBaseContext()));
-      score.setStage(Test.STAGE_2);
-      score.setSuccess(isSuccess);
-      score.setTime(use);
-//      score.setDist(dist);
-      score.setDist(Consts.pxToMm(dist, getBaseContext()));
-      score.saveInBackground(new SaveCallback() {
-        @Override
-        public void done(ParseException e) {
-          if (e != null){
-            Log.e(TAG, e.getMessage());
-          }
-        }
-      });
-
-
-      if (isSuccess == false){
-        ApplicationTest.addFail();
-      }
-
-      drawCircle();
       return super.onDoubleTap(event);
     }
 
